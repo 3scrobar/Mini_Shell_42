@@ -8,47 +8,31 @@ OBJ= $(addprefix $(OBJ_DIR)/,$(notdir $(SRC:.c=.o)))
 
 CC=cc
 CFLAGS= -Wall -Wextra -Werror -g
-LDFLAGS = -L /opt/homebrew/lib -lreadline
+LDFLAGS= -lreadline -lhistory
 
-LIBFT_DIR=ftlib
+LIBFT_DIR=libft
 LIBFT=$(LIBFT_DIR)/libft.a
-INC=-I./include -I./$(LIBFT_DIR) -I/opt/homebrew/include
+INC=-I./include -I./$(LIBFT_DIR)/include
 
-GREEN = \033[0;32m
-RED = \033[0;31m
-YELLOW = \033[1;33m
-RESET = \033[0m
 
 all: $(NAME)
-	@echo "$(YELLOW)... Compilation de $(NAME) ...$(RESET)"
-	@echo "$(GREEN)✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔$(RESET)"
 
 $(NAME): $(OBJ) $(LIBFT)
-	@echo "$(YELLOW)... Compilation de $(LIBFT) ...$(RESET)"
-	@$(CC) $(CFLAGS) $(OBJ) $(LIBFT) $(LDFLAGS) -o $@
-	@echo "$(GREEN)✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔$(RESET)"
+	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) $(LDFLAGS) -o $@
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@mkdir -p $(OBJ_DIR)
-	@$(CC) $(CFLAGS) $(INC) -c $< -o $@
+	mkdir -p $(OBJ_DIR)
+	$(CC) $(CFLAGS) $(INC) -c $< -o $@
 
 $(LIBFT):
-	@make -C $(LIBFT_DIR)
+	make -C $(LIBFT_DIR)
 
 clean:
-	@echo "$(RED)... Destruction des .O ...$(RESET)"
-	@rm -f $(OBJ)
-	@echo "$(GREEN)✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔$(RESET)"
-	@echo "$(RED)... Destruction des objets de LIBFT ...$(RESET)"
-	@make -C $(LIBFT_DIR) clean
-	@echo "$(GREEN)✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔$(RESET)"
+	rm -f $(OBJ)
+	make -C $(LIBFT_DIR) clean
 
 fclean: clean
-	@echo "$(RED)... Destruction de l executable ...$(RESET)"
-	@rm -f $(NAME)
-	@echo "$(GREEN)✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔$(RESET)"
-	@echo "$(RED)... Destruction de LIBFT.A ...$(RESET)"
-	@make -C $(LIBFT_DIR) fclean
-	@echo "$(GREEN)✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔$(RESET)"
+	rm -f $(NAME)
+	make -C $(LIBFT_DIR) fclean
 
 re: fclean all
